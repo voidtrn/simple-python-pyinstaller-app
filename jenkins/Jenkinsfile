@@ -9,6 +9,13 @@ node {
     def testOk = false
 
     try {
+        stage('Checkout') {
+            checkout scm
+            sh 'pwd'
+            sh 'ls -la'
+            sh 'find . -maxdepth 3 -type f'
+        }
+
         stage('Build') {
             sh 'python3 -m py_compile sources/add2vals.py sources/calc.py'
             buildOk = true

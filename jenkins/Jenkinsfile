@@ -36,42 +36,44 @@ node {
             '''
         }
 
-        stage('Build') {
-             sh '''
-                echo "Compiling Python files..."
-                python3 -m py_compile sources/add2vals.py sources/calc.py
-                echo "Build completed successfully"
-            '''
-            buildOk = true
-        }
-
-        stage('Test') {
-            if (buildOk) {
+        withEnv(["PATH=${env.WORKSPACE}/venv/bin:${env.PATH}"]) {
+            stage('Build') {
                 sh '''
-                    echo "Creating test reports directory..."
-                    mkdir -p test-reports
-                    
-                    echo "Running tests..."
-                    cd sources
-                    pytest test_calc.py --verbose --junit-xml=../test-reports/results.xml
-                    cd ..
+                    echo "Compiling Python files..."
+                    python3 -m py_compile sources/add2vals.py sources/calc.py
+                    echo "Build completed successfully"
                 '''
-                
-                junit allowEmptyResults: true, testResults: 'test-reports/*.xml'
-                testOk = true
+                buildOk = true
             }
-        }
 
-        stage('Deliver') {
-            if (testOk) {
-                sh '''
-                    echo "Building executable with pyinstaller..."
-                    PyInstaller --onefile sources/add2vals.py
+            stage('Test') {
+                if (buildOk) {
+                    sh '''
+                        echo "Creating test reports directory..."
+                        mkdir -p test-reports
+                        
+                        echo "Running tests..."
+                        cd sources
+                        pytest test_calc.py --verbose --junit-xml=../test-reports/results.xml
+                        cd ..
+                    '''
                     
-                    echo "Listing dist directory:"
-                    ls -la dist/ || true
-                '''
-                archiveArtifacts artifacts: 'dist/add2vals', fingerprint: true
+                    junit allowEmptyResults: true, testResults: 'test-reports/*.xml'
+                    testOk = true
+                }
+            }
+
+            stage('Deliver') {
+                if (testOk) {
+                    sh '''
+                        echo "Building executable with pyinstaller..."
+                        PyInstaller --onefile sources/add2vals.py
+                        
+                        echo "Listing dist directory:"
+                        ls -la dist/ || true
+                    '''
+                    archiveArtifacts artifacts: 'dist/add2vals', fingerprint: true
+                }
             }
         }
     } catch (Exception e) {

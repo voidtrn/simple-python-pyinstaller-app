@@ -29,8 +29,8 @@ node {
                 
                 . venv/bin/activate
                 
-                python3 -m pip install --upgrade pip
-                python3 -m pip install pytest pyinstaller pytest-xml
+                pip install --upgrade pip
+                pip install pytest pyinstaller pytest-xml
                 
                 echo "Virtual environment setup complete"
             '''
@@ -53,7 +53,7 @@ node {
                     
                     echo "Running tests..."
                     cd sources
-                    python3 -m pytest test_calc.py --verbose --junit-xml=../test-reports/results.xml
+                    pytest test_calc.py --verbose --junit-xml=../test-reports/results.xml
                     cd ..
                 '''
                 
@@ -66,7 +66,7 @@ node {
             if (testOk) {
                 sh '''
                     echo "Building executable with pyinstaller..."
-                    python3 -m PyInstaller --onefile sources/add2vals.py
+                    PyInstaller --onefile sources/add2vals.py
                     
                     echo "Listing dist directory:"
                     ls -la dist/ || true

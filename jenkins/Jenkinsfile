@@ -75,6 +75,30 @@ node {
                     archiveArtifacts artifacts: 'dist/add2vals', fingerprint: true
                 }
             }
+
+            stage('Deploy') {
+                if (testOk) {
+                    sh '''
+                        echo "Running..."
+                        chmod +x dist/add2vals
+
+                        ./dist/add2vals 5 7 > app.log 2>&1 &
+                        
+                        APP_PID=$!
+                        echo $APP_PID > app.pid
+
+                        echo "App running with PID: $APP_PID"
+                        echo "Pipeline paused for 60 seconds so the App can be tested..."
+
+                        sleep 60
+
+                        echo "Stopping..."
+                        kill $APP_PID || true
+
+                        echo "Deploy stage completed"
+                    '''
+                }
+            }
         }
     } catch (Exception e) {
         echo "Pipeline failed: ${e.getMessage()}"

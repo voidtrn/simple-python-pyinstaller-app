@@ -25,17 +25,13 @@ node {
                 python3 --version
                 
                 echo "Checking pip:"
-                python3 -m pip --version || echo "pip not available"
-                
-                echo "Installing/upgrading pip if needed:"
-                python3 -m ensurepip --upgrade || true
-                python3 -m pip install --upgrade pip
+                pip --version
                 
                 echo "Installing pytest and pyinstaller:"
-                python3 -m pip install pytest pyinstaller pytest-xml
+                pip install pytest pyinstaller pytest-xml
                 
                 echo "Verifikasi instalasi:"
-                python3 -m pytest --version
+                pytest --version
             '''
         }
 

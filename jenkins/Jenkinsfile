@@ -76,6 +76,12 @@ node {
                 }
             }
 
+            stage('Manual Approval') {
+                if (testOk) {
+                    input message: 'Continue to Deploy stage?', ok: 'Proceed'
+                }
+            }
+
             stage('Deploy') {
                 if (testOk) {
                     sh '''

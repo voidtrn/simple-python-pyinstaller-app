@@ -67,7 +67,7 @@ node {
                 if (testOk) {
                     sh '''
                         echo "Building executable with pyinstaller..."
-                        PyInstaller --onefile sources/add2vals.py
+                        pyinstaller --onefile sources/add2vals.py
                         
                         echo "Listing dist directory:"
                         ls -la dist/ || true

@@ -17,6 +17,17 @@ node {
         }
 
         stage('Build') {
+            sh '''
+                echo "Checking Python version..."
+                python3 --version
+                echo "Checking pip..."
+                pip3 --version
+                echo "Checking pytest..."
+                which pytest || echo "pytest not in PATH"
+            '''
+            
+            sh 'pip3 install pytest pytest-xml || true'
+
             sh 'python3 -m py_compile sources/add2vals.py sources/calc.py'
             buildOk = true
         }

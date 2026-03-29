@@ -20,18 +20,20 @@ node {
 
         stage('Environment Setup') {
             sh '''
-                echo "=== Environment Info ==="
-                echo "Python version:"
+                echo "=== Setting up Python virtual environment ==="
                 python3 --version
+                python3 -m venv venv
                 
-                echo "Checking pip:"
-                pip --version
+                . venv/bin/activate
                 
-                echo "Installing pytest and pyinstaller:"
+                pip install --upgrade pip
                 pip install pytest pyinstaller pytest-xml
                 
-                echo "Verifikasi instalasi:"
-                pytest --version
+                pip list | grep pytest
+                echo "Virtual environment setup complete"
+                
+                which python
+                python --version
             '''
         }
 

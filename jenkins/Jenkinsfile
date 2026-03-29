@@ -30,7 +30,7 @@ node {
                 . venv/bin/activate
                 
                 pip install --upgrade pip
-                pip install pytest pyinstaller pytest-xml pytest-item-dict
+                pip install pytest pyinstaller
                 
                 echo "Virtual environment setup complete"
             '''
